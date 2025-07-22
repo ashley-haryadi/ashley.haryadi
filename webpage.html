@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1" style="margin:20px;">
+        <title>User page</title>
+        <style>
+            
+            .overlay {
+                left: 0px;
+                right: 0px;
+                top: 0px;
+                bottom: 0px;
+                display: none;
+                position: fixed;
+
+            }
+            .display{
+                border: none;
+                outline: none;
+                background-color: skyblue;
+            }
+            .navigation{
+                text-decoration: none;
+                overflow: auto;
+                background-color: skyblue;
+                border-radius: 10px;
+            }
+            .navigation a{
+            	float: left;
+                font-size: 17px;
+                color: white;
+                padding: 10px;
+                font-size: 17px;
+            }
+            .navigation a:hover {
+                background-color: mediumOrchid;
+            }
+            .active {
+                background-color:DarkSlateBlue; 
+            }
+            .formscreen {
+                display: none;
+                position: absolute;
+                text-decoration-color: black;
+                padding: 10px;
+            }
+            #snackbar{
+                background-color: skyblue;
+                position: fixed;
+                padding: 5px;
+                bottom: 10px;
+                font-size: 20px;
+                margin: auto;
+                text-align: center;
+                display: none;
+                border-radius: 10px;
+            }
+            /*....................................................................*/
+            
+            .card {
+                background: grey;
+                grid-area: main;
+                width: 80%;
+                margin: 10px;
+            }
+            
+            .textStyle {
+                color: white;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+            
+            #gallery {
+                display: grid;
+                
+                grid-template-areas: 
+                'main main main main main main'
+                'main main main main main main'
+                'main main main main main main'
+                'main main main main main main'
+                'main main main main main main'
+                'main main main main main main';
+            }
+            @media screen and (min-width: 750px){
+                #cardClassOne{grid-area: 1/1;}
+                #cardClassTwo{grid-area: 1/2;}
+                #cardClassThree{grid-area: 1/3;}
+                #cardClassFour{grid-area: 1/4;}
+                #cardClassFive{grid-area: 1/5;}
+                #cardClassSix{grid-area: 1/6;}
+                
+            }
+            
+            @media screen and (max-width: 1100px){
+                #cardClassOne{grid-area: 2/2;}
+                #cardClassTwo{grid-area: 2/4;}
+                #cardClassThree{grid-area: 2/6;}
+                #cardClassFour{grid-area: 4/2;}
+                #cardClassFive{grid-area: 4/4;}
+                #cardClassSix{grid-area: 4/6;}
+                
+            }
+            
+            @media screen and (max-width: 750px){
+                #cardClassOne{grid-area: 1/3;}
+                #cardClassTwo{grid-area: 1/6;}
+                #cardClassThree{grid-area: 2/3;}
+                #cardClassFour{grid-area: 2/6;}
+                #cardClassFive{grid-area: 3/3;}
+                #cardClassSix{grid-area: 3/6;}
+                .largeCovers{
+                    width: 70%;
+                }
+            }
+            
+            @media screen and (max-width: 500px){
+                #cardClassOne{grid-area: 1/6;}
+                #cardClassTwo{grid-area: 2/6;}
+                #cardClassThree{grid-area: 3/6;}
+                #cardClassFour{grid-area: 4/6;}
+                #cardClassFive{grid-area: 5/6;}
+                #cardClassSix{grid-area: 6/6;}
+                
+            }
+            
+            /*....................................................................*/
+            .overlayCard{
+                left: 0px;
+                right: 0px;
+                top: 0px;
+                bottom: 0px;
+                display: none;
+                width: 100%;
+                height: 100%;
+                position: fixed;
+                overflow-y: scroll;
+            }
+            
+            .largeCovers{
+                position: relative;
+                grid-area: card;
+                margin-left: 40px;
+                
+            }
+            
+            .largeCard{
+                display: none;
+                margin: 10px;
+            }
+            
+            .overlayText{
+                grid-area: card;
+                position: relative;
+                color: black;
+            }
+            
+            /*....................................................................*/
+            
+            .prev{
+                left: 10px;
+            }
+            
+            .next{
+                right: 10px;
+            }
+            
+            .next, .prev{
+                display: none;
+                top: 40%;
+                position: fixed;
+                padding: 5px;
+                color: skyblue;
+                font-size: 30px;
+            }
+            
+            .prev:hover .next:hover{
+                background-color: rgba(50,50,50,0.2);
+            }
+            
+        </style>
+        
+        <script>
+            var phoneNumber = "";
+            var inputName = "";
+            var displayVar = "";
+            var save ="";
+            function cardChange(me){
+                document.getElementById("cardClassOne").style.display = me;
+                document.getElementById("cardClassTwo").style.display = me;
+                document.getElementById("cardClassThree").style.display = me;
+                document.getElementById("cardClassFour").style.display = me;
+                document.getElementById("cardClassFive").style.display = me;
+                document.getElementById("cardClassSix").style.display = me;
+                
+                document.getElementById("welcomeText").style.display = me;
+            }
+            
+            let slideIndex = 1;
+            showSlides(slideIndex);
+            
+            function plusSlides(n) {
+                 showSlides(slideIndex += n);
+            }
+            
+            function showSlides(n) {
+              let i;
+              let slides = document.getElementsByClassName("largeCard");
+            //   alert(slides);
+              if (n > slides.length) {slideIndex = 1}
+              if (n < 1) {slideIndex = slides.length}
+              for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+                // alert(slides.length);
+              }
+              slides[slideIndex-1].style.display = "block";
+            }
+            // ....................................................................
+            
+            function on() {
+                document.getElementById("overlay").style.display="block";
+                document.getElementById("formScreen").style.display="block";
+                
+                cardChange("none");
+                document.getElementById("homeButton").className = "display";
+                document.getElementById("formButton").className = "active";
+                
+                
+            }
+            function off() {
+                document.getElementById("overlay").style.display= "none";
+                document.getElementById("formScreen").style.display="none";
+                
+                cardChange("block");
+                
+                document.getElementById("homeButton").className = "active";
+                document.getElementById("formButton").className = "display";
+                
+            }
+            
+            function submit(){
+                phoneNumber=document.getElementById('phoneNumber').value;
+                inputName=document.getElementById('addedName').value;
+                if (inputName === "" || phoneNumber === ""){
+                    alert("Please input name and phone number");
+                    return;
+                }
+                document.getElementById("formScreen").style.display="none";
+                document.getElementById("inputName").innerHTML=inputName;
+                document.getElementById("overlay").style.display="none";
+                cardChange("block");
+                snackBar();
+                
+            }
+            
+            function snackBar(){
+                document.getElementById("homeButton").className = "active";
+                document.getElementById("formButton").className = "display";
+                displayVar=document.getElementById("snackbar").style.display="block";
+                setTimeout(function() {document.getElementById("snackbar").style.display="none"}, 3000);
+            }
+            // // ....................................................................
+            
+            function toggleCard(name){
+                buttonText = document.getElementById(name);
+                
+                if(buttonText.innerHTML == "added"){
+                    buttonText.innerHTML= "buy";
+                }
+                else{
+                    buttonText.innerHTML= "added";
+                }
+            }
+            
+            // ....................................................................
+            
+            function overlayCard(bookCover){
+                document.getElementById("cardOverlay").style.display = "block";
+                document.getElementById(bookCover+"LargeCard").style.display = "block";
+                document.getElementById("prevButton").style.display = "block";
+                document.getElementById("nextButton").style.display = "block";
+                cardChange("none");
+                save = bookCover+"LargeCard";
+            }
+            
+            function offOverlayCard(){
+                document.getElementById("cardOverlay").style.display = "none";
+                document.getElementById(save).style.display = "none";
+                document.getElementById("prevButton").style.display = "none";
+                document.getElementById("nextButton").style.display = "none";
+                cardChange("block");
+                
+                document.getElementById("FridayBarnesLargeCard").style.display = "none";
+                document.getElementById("MurderMostUnladylikeLargeCard").style.display = "none";
+                document.getElementById("ScarletAndIvyLargeCard").style.display = "none";
+                document.getElementById("WingsOfFireSundewLargeCard").style.display = "none";
+                document.getElementById("HollowpoxLargeCard").style.display = "none";
+                document.getElementById("AliceInWonderlandLargeCard").style.display = "none";
+                
+                }
+            
+            // ....................................................................
+            
+            // function home(){
+            //     cardChange("block");
+                
+            //     document.getElementById("homeButton").className = "active";
+            //     document.getElementById("formButton").className = "display";
+            //     document.getElementById("formScreen").style.display = "none";
+                
+                
+            // }
+        </script>
+        
+    </head>
+    <body>
+        <div id="overlay" onclick="off()" class="overlay"></div>
+        
+        <div class="navigation">
+            <button onclick="home()" class="active" id="homeButton"><a href="#"><i class="fa fa-fw fa-home"></i> home</a></button>
+            <button onclick="on()" class="display" id="formButton"><a href="#"><i class="fa fa-fw fa-profile"></i> profile</a></button>
+        </div>
+        
+        <!--........................................................................-->
+        
+        <div id="formScreen" class="formscreen">
+            <label>Name:</label><br>
+            <input type="text" id="addedName"><br>
+            <label>Phone Number:</label><br>
+            <input type="text" id="phoneNumber"><br>
+            <button onclick="submit('addedName')" style="margin-top: 20px">Submit</button>
+        </div> 
+        <!--........................................................................-->
+        
+        <p id="welcomeText"><strong>Welcome <span id="inputName" ></span></strong></p>
+        
+        <div id="cardOverlay" onclick="offOverlayCard()" class="overlay"></div>
+        
+        <!--........................................................................-->
+        
+        <div id="gallery">
+            <div class="card" id="cardClassOne">
+                <img src="FridayBarnesBookCover.png" id="FridayBarnes" style="width: 100%;">
+                
+                <div class="textStyle">
+                    <p>Friday Barnes series, girl dectective</p>
+                    <p>By R.A Spratt</p>
+                    <p>$13.00</p>
+                    
+                    <p><button onclick="overlayCard('FridayBarnes')">More information</button></p>
+                    
+                    <p><button onclick="toggleCard('buttonClassOne')" id="buttonClassOne">buy</button></p>
+                    
+                </div>
+                
+            </div>
+            
+            <!--....................................................................-->
+            
+            <div class="card" id="cardClassTwo">
+                <img src="MurderMostUnladylikeBookCover.png" id="MurderMostUnladylike" style="width: 100%;">
+                
+                <div class="textStyle">
+                    <p>Murder most unladylike series, first book</p>
+                    <p> By Robin Stevens</p>
+                    <p>$15.00</p>
+                    
+                    <p><button onclick="overlayCard('MurderMostUnladylike')">More information</button></p>
+                    
+                    <p><button onclick="toggleCard('buttonClassTwo')" id="buttonClassTwo">buy</button></p>
+                    
+                </div>
+                
+            </div>
+            
+            <!--....................................................................-->
+            
+            <div class="card" id="cardClassThree">
+                <img src="ScarletAndIvyBookCover.png" id="ScarletAndIvy" style="width: 100%;">
+                
+                <div class="textStyle">
+                    <p>Scarlet and Ivy series, the lost twin</p>
+                    <p>By Sophie Cleverly</p>
+                    <p>$14.50</p>
+                </div>
+                    
+                    <p><button onclick="overlayCard('ScarletAndIvy')">More information</button></p>
+                    
+                    <p><button onclick="toggleCard('buttonClassThree')" id="buttonClassThree">buy</button></p>
+                
+            </div>
+            
+            <!--....................................................................-->
+            
+            <div class="card" id="cardClassFour">
+                <img src="WingsOfFireSundewBookCover.png" id="WingsOfFireSundew" style="width: 100%;">
+                
+                <div class="textStyle">
+                    <p>Wings of fire series, the poison jungle</p>
+                    <p>By Tui.T.Sutherland </p>
+                    <p>$8.00</p>
+                </div>
+                    
+                    <p><button onclick="overlayCard('WingsOfFireSundew')">More information</button></p>
+                    
+                    <p><button onclick="toggleCard('buttonClassFour')" id="buttonClassFour">buy</button></p>
+                
+            </div>
+            
+            <!--....................................................................-->
+            
+            <div class="card" id="cardClassFive">
+                <img src="HollowpoxBookCover.png" id="Hollowpox" style="width: 100%;">
+                
+                <div class="textStyle">
+                    <p>Nevermoor series, Hollowpox</p>
+                    <p>By Jessica Townsend</p>
+                    <p>$12.00</p>
+                </div>
+                    
+                    <p><button onclick="overlayCard('Hollowpox')">More information</button></p>
+                    
+                    <p><button onclick="toggleCard('buttonClassFive')" id="buttonClassFive">buy</button></p>
+                
+            </div>
+            
+            <!--....................................................................-->
+            
+            <div class="card" id="cardClassSix">
+                <img src="AliceInWonderlandBookCover.png" id="AliceInWonderland" style="width: 100%;">
+                
+                <div class="textStyle">
+                    <p>Alice in wonderland</p>
+                    <p>By Lewis Carol</p>
+                    <p>$20.00</p>
+                </div>
+                
+                <p><button onclick="overlayCard('AliceInWonderland')">More information</button></p>
+                
+                <p><button onclick="toggleCard('buttonClassSix')" id="buttonClassSix">buy</button></p>
+                
+            </div>
+        </div>
+        
+        <!--........................................................................-->
+        <div id="FridayBarnesLargeCard" class="largeCard">
+            <img src="FridayBarnesBookCoverLarge.png" class="largeCovers">
+            <p class="overlayText" >Friday Barnes <br>RA.Spratt</p>
+            <p class="overlayText"> Friday Barnes is a mystery solver in her school Highcrest.</p>
+        </div>
+        
+        <div id="MurderMostUnladylikeLargeCard" class="largeCard">
+            <img src="MurderMostUnladylikeBookCoverLarge.png" class="largeCovers">
+            <p class="overlayText" >Murder Most Unladylike <br>Robin Stevens</p>
+            <p class="overlayText" > There's a murder in the Deepan school for girls and it needs to be solved.</p>
+        </div>
+        
+        <div id="ScarletAndIvyLargeCard" class="largeCard">
+            <img src="ScarletAndIvyBookCoverLarge.png" class="largeCovers">
+            <p class="overlayText">Scarlet and Ivy<br>Sophie Cleverly</p>
+            <p class="overlayText">Scarlet, Ivy's twin is missing and Ivy has to pretend to be Scarlet while she finds her.</p>
+        </div>
+        
+        <div id="WingsOfFireSundewLargeCard" class="largeCard">
+            <img src="WingsOfFireSundewBookCoverLarge.png" class="largeCovers">
+            <p class="overlayText">The Poison Jungle<br>Tui.t.Sutherland</p>
+            <p class="overlayText">In the Poison Jungle a forgotten tribe lives deep inside.</p>
+        </div>
+        
+        <div id="HollowpoxLargeCard" class="largeCard">
+            <img src="HollowpoxBookCoverLarge.png" class="largeCovers">
+            <p class="overlayText">Hollowpox<br>Jessica Townsend</p>
+            <p class="overlayText">A disease takes over the creatures of Nevermoor, and Morigian Crow need to solve it.</p>
+            
+        </div>
+        
+        <div id="AliceInWonderlandLargeCard" class="largeCard">
+            <img src="AliceInWonderlandBookCoverLarge.png" class="largeCovers">
+            <p class="overlayText">Alice In Wonderland<br>Lewis Carol</p>
+            <p class="overlayText">In a world of twist and turns in Wonderland</p>
+        </div>
+        <!--........................................................................-->
+        
+          <a class="prev" onclick="plusSlides(-1)" id="prevButton">❮</a>
+          <a class="next" onclick="plusSlides(1)" id="nextButton">❯</a>
+        
+        <!--........................................................................-->
+        <div id="snackbar">Submitted</div>
+        
+    </body>
+</html>
